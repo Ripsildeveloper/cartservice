@@ -1,0 +1,27 @@
+{
+  "name": "arif-buyer-service",
+  "version": "1.0.0",
+  "description": "Buyer Service",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "ArifBuyer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "child_process": "^1.0.2",
+    "connect-mongo": "^2.0.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongoose": "^5.0.18",
+    "nodemailer": "^4.6.7",
+    "nodemon": "^1.17.4",
+    "random-key-generator": "^1.2.3"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
+}
