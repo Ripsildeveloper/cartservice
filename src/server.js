@@ -34,12 +34,8 @@ app.use(session({
   store: new MongoStore({
     mongooseConnection: mongoose.connection
   }),
-  cookie: { httpOnly: false }
+  cookie: { httpOnly: true }
 }));
-app.use(function (req, res, next) {
-  res.locals.session = req.session;
-  next();
-});
 routes.loadRoutes(app);
 var httpServer = http.createServer(app);
 
