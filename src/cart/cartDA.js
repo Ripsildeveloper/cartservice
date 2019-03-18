@@ -2,51 +2,63 @@
 var Cart = require('../model/cartModel.model');
 
 exports.addCartData = function (req, res) {
-    const user = req.body.user;
-    const item = {
-      product: req.body.items,
-      quantity: req.body.items.mfdQty
-    };
-  
-    Cart.findOne({ user: user })
-      .then((foundCart) => {
-        if (foundCart) {
-          let products = foundCart.items.map((item) => item.product + '');
-          if (products.includes(item.product)) {
-            Cart.findOneAndUpdate({
-              user: user,
-              items: {
-                $elemMatch: { product: item.product }
-              }
-            },
-              {
-                $inc: { 'items.$.quantity': item.quantity }
-              })
-              .exec()
-              .then(() => res.end());
-          } else {
-            foundCart.items.push(item);
-            foundCart.save().then(() => res.end());
-          }
-        } else {
-          Cart.create({
-            user: user,
-            items: [item]
+  Cart.findOneAndUpdate({
+      userId: req.params.userId
+    }, {
+      $push: {
+        product: req.body.product
+      }
+    },
+    function (err, cart) {
+      if (err) { // if it contains error return 0
+        res.status(500).send({
+          "result": 0
+        });
+      } else {
+        if (!cart) {
+          var cart = new Cart()
+          cart.userId = req.params.userId;
+          cart.product = req.body.product;
+          cart.save(function (err, newCart) {
+            if (err) {
+              res.status(201).send({
+                "result": 0
+              });
+            } else {
+              console.log(newCart);
+            }
           })
-            .then(() => res.end());
         }
-      });
+      }
+    })
 };
 
 
 exports.cartUser = function (req, res) {
-        Cart.findOne({ user: req.params.id })
-        .populate('items[0].product')
-        .exec((err, cart) => {
-          if (!cart) {
-            return res.send(null);
-          }
-      
-          res.send(cart);
-        });
+  Cart.aggregate([{
+      "$unwind": "$product"
+    },
+    {
+      "$match": {
+        "userId": req.params.userId
+      }
+    },
+    {
+      $group: {
+        _id: {
+          id: "$product.id",
+          productDescription: "$product.productDescription",
+          productImageName: "$product.productImageName"
+        },
+        sumQty: {
+          $sum: '$product.qty'
+        },
+        sumPrice: {"$sum" : {
+          "$multiply": ["$product.price", "$product.qty"]
+        }
+      }},
+    }
+  ], function (err, data) {
+    console.log(data);
+  })
 };

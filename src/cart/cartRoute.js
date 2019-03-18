@@ -3,10 +3,10 @@ var cartMgr = require('./cartMgr');
 
 
 module.exports = function (app) {
-    app.route('/cart')
-        .post(cartMgr.addCartData);
+    app.route('/cart/:userId')
+        .put(cartMgr.addCartData);
 
-     app.route('/cart/:id')
+     app.route('/cart/:userId')
         .get(cartMgr.cartUser);
   /*      
         app.route('/pwdChange/:emailId')

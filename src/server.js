@@ -65,7 +65,6 @@ app.get('/test/:id', function (req, res) {
   res.header("Access-Control-Allow-Credentials", "true");
   /* res.send("Success!"); */
   var productId = req.params.id;
-  console.log(req.session.cart);
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   Product.findById(productId, function (err, product) {
     if (err) {
@@ -112,10 +111,10 @@ app.get('/reduce/:id', function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header("Access-Control-Allow-Credentials", "true");
   var productId = req.params.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
 
   cart.reduceByOne(productId);
   req.session.cart = cart;
+  req.session.user = user;
   res.status(200).json({
     products: cart.generateArray(),
     totalPrice: cart.totalPrice,

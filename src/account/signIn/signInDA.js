@@ -2,10 +2,6 @@
 var AdminAccount = require('../../model/account.model');
 
 exports.signInToSite = function (req, res) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header("Access-Control-Allow-Credentials", "true");
   AdminAccount.find({
     'userName': req.body.userName,
     'password': req.body.password
